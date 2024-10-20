@@ -9,7 +9,6 @@ use RateLimiter\Storage\RedisStorage;
 use RateLimiter\Storage\MySQLStorage;
 use RateLimiter\RateLimitStrategyFactory;
 use RateLimiter\RateLimiter;
-use Redis;
 
 // 1. 存储设置示例
 function getRedisStorage() {
@@ -43,7 +42,8 @@ function getMysqlStorage() {
 }
 
 // 2. 创建限流策略和实例
-$storage = getRedisStorage(); // 或 getMysqlStorage()
+$storage = getRedisStorage(); //
+// $storage = getMysqlStorage(); // 或 getMysqlStorage()
 $strategyFactory = new RateLimitStrategyFactory();
 $strategy = $strategyFactory->create('token_bucket', $storage);
 
@@ -93,7 +93,7 @@ function runLeakyBucketTest($leakyBucketRateLimiter, $userId, $capacity, $leakRa
         $availableCapacity = $leakyBucketRateLimiter->getAvailableCapacity($key);
 
         echo date('H:i:s') . " - 漏斗请求 {$i} " . ($result ? "被允许" : "被拒绝") .
-            " (可用容量: {$availableCapacity})\n</br>";
+            " \n</br>";
 
         usleep(500000); // 休眠0.5秒
     }
@@ -108,22 +108,22 @@ $globalPeriod = 60; // 60秒内限制10次全局请求
 $waitTime = 2; // 等待时间，可以根据需要调整
 
 // 6. 执行令牌桶测试
-echo "令牌桶策略测试\n</br>";
-echo "第一次测试开始\n</br>";
-runTest($userRateLimiter, $globalRateLimiter, $userId, $userLimit, $userPeriod, $globalLimit, $globalPeriod);
+// echo "令牌桶策略测试\n</br>";
+// echo "第一次测试开始\n</br>";
+// runTest($userRateLimiter, $globalRateLimiter, $userId, $userLimit, $userPeriod, $globalLimit, $globalPeriod);
 
-echo "等待{$waitTime}秒...\n</br>";
-sleep($waitTime);
+// echo "等待{$waitTime}秒...\n</br>";
+// sleep($waitTime);
 
-echo "第二次测试开始\n</br>";
-runTest($userRateLimiter, $globalRateLimiter, $userId, $userLimit, $userPeriod, $globalLimit, $globalPeriod);
+// echo "第二次测试开始\n</br>";
+// runTest($userRateLimiter, $globalRateLimiter, $userId, $userLimit, $userPeriod, $globalLimit, $globalPeriod);
 
 // 7. 漏斗策略测试
 echo "\n漏斗策略测试\n</br>";
 $leakyBucketStrategy = $strategyFactory->create('leaky_bucket', $storage);
 $leakyBucketRateLimiter = new RateLimiter($leakyBucketStrategy);
 
-$capacity = 10;
+$capacity = 5;
 $leakRate = 1; // 每秒泄漏1个请求
 
 echo "第一次测试开始\n</br>";
