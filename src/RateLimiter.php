@@ -4,6 +4,7 @@ namespace RateLimiter;
 
 use RateLimiter\Strategies\RateLimitStrategyInterface;
 use RateLimiter\Strategies\TokenBucketStrategy;
+use RateLimiter\Strategies\LeakyBucketStrategy;
 
 class RateLimiter
 {
@@ -25,5 +26,14 @@ class RateLimiter
             return $this->strategy->getAvailableTokens($key);
         }
         throw new \RuntimeException("Current strategy does not support getAvailableTokens");
+    }
+
+
+    public function  getAvailableCapacity($key): float
+    {
+        if ($this->strategy instanceof LeakyBucketStrategy) {
+            return $this->strategy->getAvailableCapacity($key);
+        }
+        throw new \RuntimeException("Current strategy does not support getAvailableCapacity");
     }
 }
